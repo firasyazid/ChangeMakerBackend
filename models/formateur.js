@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const collaboraterSchema = mongoose.Schema({
+const formateurSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -8,7 +8,7 @@ const collaboraterSchema = mongoose.Schema({
     lastname: {
         type: String,
     },
-    location: { 
+    adress: { 
         type: String,
     },
     phone: { 
@@ -19,11 +19,7 @@ const collaboraterSchema = mongoose.Schema({
         type:String,
     }, 
     
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required:true
-    },
+     
     
      
 })
@@ -38,4 +34,5 @@ const collaboraterSchema = mongoose.Schema({
     
  
 
-exports.Collaborater = mongoose.model('Collaborater',  collaboraterSchema);
+exports.Formateur = mongoose.model('Formateur',  formateurSchema);
+exports.formateurSchema = formateurSchema;
