@@ -7,28 +7,35 @@ const formateurSchema = mongoose.Schema({
     },
     lastname: {
         type: String,
+        required: true,
+
     },
     adress: { 
         type: String,
+        required: true,
+
     },
     phone: { 
         type: String,
-    },
+        required: true,
 
+    },
     image:{ 
         type:String,
     }, 
-    
-     
+    formations: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Formation',
+      }],
     
      
 })
 
-   collaboraterSchema.virtual('id').get(function () {
+formateurSchema.virtual('id').get(function () {
         return this._id.toHexString();
     });
     
-    collaboraterSchema.set('toJSON', {
+    formateurSchema.set('toJSON', {
         virtuals: true,
     });
     

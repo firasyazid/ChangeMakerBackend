@@ -1,7 +1,6 @@
 {
   "name": "mobileproject",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js",
@@ -28,5 +27,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.19"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }

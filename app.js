@@ -21,11 +21,17 @@ app.use(errorHandler);
 
  
 const userRouter = require ('./routes/user');
+const formateurRouter = require ('./routes/formateur');
+const formationRouter = require ('./routes/formation');
+const seanceRouter = require ('./routes/seance');
+
   
 
 //Routes 
  app.use(`${api}/users`, userRouter);
-  
+ app.use(`${api}/formateur`, formateurRouter);
+ app.use(`${api}/formation`, formationRouter);
+ app.use(`${api}/seance`, seanceRouter);
 
 
 

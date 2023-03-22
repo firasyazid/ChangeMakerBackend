@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const formationSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -9,22 +8,25 @@ const formationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    formateur: {
+
+    file: {
+        type: String,  
+        required: true,
+      },
+
+      seances: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Formateur',
-        required:true
-    },
-    
-     
+        ref: 'Seance',
+      }],
     
 
 });
 
-userSchema.virtual('id').get(function () {
+formationSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-userSchema.set('toJSON', {
+formationSchema.set('toJSON', {
     virtuals: true,
 });
 
