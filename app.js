@@ -7,8 +7,6 @@ require('dotenv/config');
 const authJwt = require('./middleware/jwt');
 const errorHandler = require('./middleware/error');
 const api = process.env.API_URL;
-
-
 //Middleware
 
 app.use(morgan('tiny'));
@@ -21,23 +19,18 @@ app.use(errorHandler);
 
  
 const userRouter = require ('./routes/user');
-const formateurRouter = require ('./routes/formateur');
 const formationRouter = require ('./routes/formation');
 const seanceRouter = require ('./routes/seance');
+const ecolerouter = require ('./routes/ecole');
 
-  
 
 //Routes 
- app.use(`${api}/users`, userRouter);
- app.use(`${api}/formateur`, formateurRouter);
- app.use(`${api}/formation`, formationRouter);
+ app.use(`${api}/user`, userRouter);
+app.use(`${api}/formation`, formationRouter);
  app.use(`${api}/seance`, seanceRouter);
+ app.use(`${api}/ecole`, ecolerouter);
 
 
-
-
-
- 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,
@@ -50,8 +43,6 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 .catch((err)=> {
   console.log(err);
 })
- 
-
 app.listen(3000, ()=>{
      console.log('server is running http://localhost:3000');
 })

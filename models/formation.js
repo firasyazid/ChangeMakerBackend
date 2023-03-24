@@ -10,10 +10,10 @@ const formationSchema = new mongoose.Schema({
     },
 
     file: {
-        type: String,  
-        required: true,
+        type: [String], // array of file paths
+        default: [],
       },
-
+    
       seances: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Seance',

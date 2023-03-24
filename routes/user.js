@@ -4,13 +4,37 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {Formation} = require('../models/formation');
+const mongoose = require('mongoose');
+const multer = require('multer');
 
+const FILE_TYPE_MAP = {
+    'image/png': 'png',
+    'image/jpeg': 'jpeg',
+    'image/jpg': 'jpg'
+};
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const isValid = FILE_TYPE_MAP[file.mimetype];
+        let uploadError = new Error('invalid image type');
 
- 
+        if (isValid) {
+            uploadError = null;
+        }
+      cb(null, 'public/uploads')
+    },
+    filename: function (req, file, cb) {
+        const fileName = file.originalname.split(' ').join('-');
+        const extension = FILE_TYPE_MAP[file.mimetype];
+        cb(null, `${fileName}-${Date.now()}.${extension}`);
+    }
+  })
+
+  const uploadOptions = multer({ storage: storage });
 
 router.get(`/`, async (req, res) =>{
-    const userList = await User.find().select('-passwordHash');
+    const userList = await User.find().select('-passwordHash')
+    .populate('formations','name');
 
     if(!userList) {
         res.status(500).json({success: false})
@@ -109,27 +133,50 @@ router.delete('/:id', (req, res)=>{
 });
 
 
-router.post('/', async (req, res) => {
+ 
+  
+  
+  router.post('/',uploadOptions.single('image'), async (req, res) => {
     try {
-      const { name, email, password, phone, isAdmin,adress, formations } = req.body;
+      const { name, email, lastname, password, phone, isAdmin, adress, formations } = req.body;
+  
+      if (!name || !email || !lastname || !password || !phone || !adress )  {
+        return res.status(400).send('Please provide all required fields');
+      }
   
        if (isAdmin && typeof formations !== 'undefined' && formations.length > 0) {
-        return res.status(400).send(' admin users cannot have formations');
+        return res.status(400).send('Admin users cannot have formations');
       }
+  
+      let formation;
+  
+      if (formations) {
+        try {
+          formation = await Formation.findById(req.body.formations);
+          if (!formation) {
+            return res.status(400).send('Invalid formation');
+          }
+        } catch (error) {
+          console.error(error);
+          return res.status(500).send('Error finding formation');
+        }
+      }
+      const imagePath = req.file ? `${req.protocol}://${req.get('host')}/public/uploads/${req.file.filename}` : '';
 
-      const formation = await Formation.findById(req.body.formation);
-      if (!formation) return res.status(400).send('Invalid formation');
-
+      const passwordHash = await bcrypt.hash(password, 10);
+  
       const user = new User({
         name,
+        lastname,
         email,
-        passwordHash: bcrypt.hashSync(password, 10),
+        passwordHash,
+        image: imagePath,
         phone,
         isAdmin,
-        formations: formations || [],  
-        adress 
+        formations: formations || [],
+        adress,
       });
-
+   
       const savedUser = await user.save();
       res.send(savedUser);
     } catch (error) {
@@ -137,7 +184,6 @@ router.post('/', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
-  
   
   
 module.exports =router;

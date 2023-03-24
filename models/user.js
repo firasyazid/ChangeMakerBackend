@@ -6,8 +6,7 @@ const userSchema = new mongoose.Schema({
     },
     lastname: {
         type: String,
-        required: true,
-    },
+     },
     email: {
         type: String,
         required: true,
@@ -23,13 +22,31 @@ const userSchema = new mongoose.Schema({
     },
     isAdmin: {
         type: Boolean,   
+        default:false, 
     },
     adress: {
         type: String,
         default: ''
     },
+    image:{ 
+        type:String,
+    }, 
+    formations: [{
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Formation' }],
+        validate: {
+          validator: function (formations) {
+             const user = this;
     
-
+             if (user.isAdmin) {
+              return formations.length === 0;
+            }
+    
+             return true;
+    },
+          message: 'Only non-admin users can have formations.',
+        },
+    }],
+    
 });
 
 userSchema.virtual('id').get(function () {

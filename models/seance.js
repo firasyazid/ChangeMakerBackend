@@ -10,27 +10,31 @@ const seanceSchema = new mongoose.Schema({
         required: true,
     },
 
-    dateFormation: {
+    dateSeance: {
         type: Date,
         default: Date.now,
      },
-    formateur: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Formateur',
-        required:true
-    },
-    
     formation: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Formation',
+        required:true
+    },
+    
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
       },
     
   procesVerbal :{ 
-    type: String,  
-    required: true,
-  }
+    type: [String],  
+    default: [],
+   },
 
+   picture: {
+    type: String,
+  },
+  
 
 });
 seanceSchema.virtual('id').get(function () {
